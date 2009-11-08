@@ -1,0 +1,37 @@
+{% load i18n adminmedia %}
+
+{% with inline_admin_formset.opts.tiled_by_default as tiled %}
+
+<div class="inline-group{% if tiled %} tiled {% endif %}">
+  <h2>
+	{{ inline_admin_formset.opts.verbose_name_plural|title }}
+	<span class="tile-toggle">
+		<input id="tile-toggle-{{ inline_admin_formset.opts.verbose_name }}" type="checkbox"{% if tiled %} checked="checked"{% endif %} onclick="var x = this.parentNode.parentNode.parentNode; if (x.className.indexOf('tiled') > -1) x.className='inline-group'; else x.className+=' tiled';" />
+		<label for="tile-toggle-{{ inline_admin_formset.opts.verbose_name }}">Tile?</label>
+	</span>
+  </h2>
+{{ inline_admin_formset.formset.management_form }}
+{{ inline_admin_formset.formset.non_form_errors }}
+
+{% for inline_admin_form in inline_admin_formset %}
+<div class="inline-related{% if forloop.last %} last-related{% endif %}{% if inline_admin_form.original %} existing{% endif %}">
+  <h3><b>{{ inline_admin_formset.opts.verbose_name|title }}:</b>&nbsp;{% if inline_admin_form.original %}{{ inline_admin_form.original }}{% else %} #{{ forloop.counter }}{% endif %}
+    {% if inline_admin_formset.formset.can_delete and inline_admin_form.original %}<span class="delete">{{ inline_admin_form.deletion_field.field }} {{ inline_admin_form.deletion_field.label_tag }}</span>{% endif %}
+  </h3>
+  {% if inline_admin_form.show_url %}
+  <p><a href="../../../r/{{ inline_admin_form.original_content_type_id }}/{{ inline_admin_form.original.id }}/">{% trans "View on site" %}</a></p>
+  {% endif %}
+  {% if inline_admin_form.form.non_field_errors %}{{ inline_admin_form.form.non_field_errors }}{% endif %}
+
+  {% for fieldset in inline_admin_form %}
+    {% include "admin/includes/fieldset.html" %}
+  {% endfor %}
+  {% if inline_admin_form.has_auto_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+  {{ inline_admin_form.fk_field.field }}
+</div>
+{% endfor %}
+
+{% endwith %}
+
+<br style="clear: both;" />
+</div>

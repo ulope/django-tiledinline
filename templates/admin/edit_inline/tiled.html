@@ -1,5 +1,30 @@
 {% load i18n adminmedia %}
 
+{% block extrastyle %}
+	<style type="text/css">
+		.tile-toggle {
+			float:			right;
+		}
+			.tile-toggle label {
+				color:			white;
+				font-size:		11px;
+			}
+		
+		.inline-group.tiled .inline-related {
+			float:			left;
+			border:			1px solid #cccccc;
+			margin:			3px 0 2px 5px;
+		}
+			.tiled .inline-related:not(.add-inline) h3 {
+				background: #7CA0C7 url('{% admin_media_prefix %}img/admin/default-bg.gif') repeat-x left top;
+				color:			white;
+			}
+				.tiled .inline-related:not(.add-inline) h3 label {
+					color:			white;
+				}
+	</style>
+{% endblock %}
+
 {% with inline_admin_formset.opts.tiled_by_default as tiled %}
 
 <div class="inline-group{% if tiled %} tiled {% endif %}">
